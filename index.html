@@ -1,12 +1,319 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>xuangroup</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico">`
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        @font-face {
+            font-family: "Chillax";
+            src: url("Chillax-Regular.otf") format("opentype");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding-bottom: 10vh;
+            overflow-x: hidden;
+        }
+
+        .stage {
+            position: relative;
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            width: 46vw;
+        }
+
+        .stage img {
+            display: block;
+            width: auto;
+            height: 40vh;
+            max-width: 100%;
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-select: none;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        .card {
+            position: relative;
+            transform: translateX(0);
+            transition: transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .card.is-open {
+            transform: translateX(-110px);
+        }
+
+        .scramble {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            margin-left: clamp(36px, 6vw, 72px);
+            transform: translateY(-50%) translateX(-6px);
+            font-family: "Chillax", "SFMono-Regular", "Menlo", "Consolas", monospace;
+            font-size: 26px;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            color: #24292f;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.6s ease;
+        }
+
+        .font-metrics {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            font-family: "Chillax", monospace;
+            font-size: 26px;
+        }
+
+        .card.is-open .scramble {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .icons {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 2vh;
+            margin-top: 3vh;
+        }
+
+        .github,
+        .discussions {
+            display: block;
+            padding: 8px;
+            color: #24292f;
+            line-height: 0;
+            transition: color 0.15s ease, transform 0.15s ease;
+        }
+
+        .github:hover,
+        .discussions:hover {
+            color: #0969da;
+            transform: scale(1.12);
+        }
+
+        .github:focus-visible,
+        .discussions:focus-visible {
+            outline: 2px solid #0969da;
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+
+        .github svg,
+        .discussions svg {
+            display: block;
+            width: 40px;
+            height: 40px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 600px) {
+            .stage {
+                width: 62vw;
+            }
+
+            .stage img {
+                height: 30vh;
+            }
+
+            .card.is-open {
+                transform: translateX(-26px);
+            }
+
+            .scramble {
+                margin-left: 16px;
+                font-size: 19px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .card {
+                transform: none !important;
+                transition: none;
+            }
+
+            .scramble {
+                transition: opacity 0.2s ease;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Direct to GitHub Pages</p>
+    <span class="font-metrics" aria-hidden="true">Chillax</span>
+
+    <div class="stage" id="stage">
+        <div class="card" id="card">
+            <img src="xuangroup.png" alt="xuangroup" draggable="false">
+            <span class="scramble" id="scramble" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <div class="icons">
+        <a class="github" href="https://github.com/xuangroup" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
+            </svg>
+        </a>
+
+        <a class="discussions" href="https://github.com/xuangroup/resource/discussions" target="_blank" rel="noopener noreferrer" aria-label="讨论区">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1ZM1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25Zm13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/>
+            </svg>
+        </a>
+    </div>
+
+    <script>
+        (function () {
+            var stage = document.getElementById("stage");
+            var card = document.getElementById("card");
+            var out = document.getElementById("scramble");
+            if (!stage || !card || !out) return;
+
+            var img = card.querySelector("img");
+            if (!img) return;
+
+            var TARGETS = ["萱组", "xuangroup", "萱ぐみ"];
+            var POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}—=+*^?#________あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン萱组組々";
+
+            var timer = null;
+            var hideTimer = null;
+            var open = false;
+            var refRect = null;
+
+            function prefersReducedMotion() {
+                try {
+                    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            function rand(str) {
+                return str.charAt(Math.floor(Math.random() * str.length));
+            }
+
+            function inRect(r, x, y) {
+                return !!r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+            }
+
+            function overLogo(x, y) {
+                return inRect(img.getBoundingClientRect(), x, y) || inRect(refRect, x, y);
+            }
+
+            function stopText() {
+                if (timer !== null) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            function hide() {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+                stopText();
+                open = false;
+                refRect = null;
+                card.classList.remove("is-open");
+                out.textContent = "";
+            }
+
+            function show() {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+                open = true;
+                refRect = img.getBoundingClientRect();
+                card.classList.add("is-open");
+                scramble(TARGETS[Math.floor(Math.random() * TARGETS.length)]);
+            }
+
+            function scramble(target) {
+                stopText();
+
+                if (prefersReducedMotion()) {
+                    out.textContent = target;
+                    return;
+                }
+
+                var locked = 0;
+                var frame = 0;
+
+                timer = setInterval(function () {
+                    if (frame % 3 === 0) locked++;
+                    frame++;
+
+                    var text = "";
+                    for (var i = 0; i < target.length; i++) {
+                        text += i < locked ? target.charAt(i) : rand(POOL);
+                    }
+                    out.textContent = text;
+
+                    if (locked > target.length) {
+                        out.textContent = target;
+                        stopText();
+                    }
+                }, 55);
+            }
+
+            stage.addEventListener("pointermove", function (e) {
+                if (e.pointerType === "touch") return;
+                var hit = overLogo(e.clientX, e.clientY);
+
+                if (hit) {
+                    if (!open) show();
+                    return;
+                }
+
+                if (open) hide();
+            });
+
+            stage.addEventListener("pointerleave", function () {
+                if (open) hide();
+            });
+
+            stage.addEventListener("pointerdown", function (e) {
+                if (e.pointerType === "touch" && overLogo(e.clientX, e.clientY)) {
+                    show();
+                    hideTimer = setTimeout(hide, 2600);
+                }
+            });
+
+            window.__logoFx = {
+                isOpen: function () {
+                    return open;
+                },
+                hit: overLogo,
+                rect: function () {
+                    return img.getBoundingClientRect();
+                }
+            };
+        })();
+    </script>
 </body>
 </html>
