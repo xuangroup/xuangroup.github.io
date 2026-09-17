@@ -43,16 +43,22 @@
             width: 46vw;
         }
 
-        .stage img {
+        .stage .mark {
             display: block;
             width: auto;
             height: 40vh;
             max-width: 100%;
-            object-fit: contain;
             user-select: none;
             -webkit-user-select: none;
             pointer-events: none;
             -webkit-user-drag: none;
+        }
+
+        .mark .stroke {
+            fill: none;
+            stroke: #000000;
+            stroke-width: 10;
+            stroke-miterlimit: 10;
         }
 
         .card {
@@ -139,7 +145,7 @@
                 width: 62vw;
             }
 
-            .stage img {
+            .stage .mark {
                 height: 30vh;
             }
 
@@ -170,7 +176,17 @@
 
     <div class="stage" id="stage">
         <div class="card" id="card">
-            <img src="xuangroup.png" alt="xuangroup" draggable="false">
+            <svg class="mark" viewBox="815 139 289.18 801.32" width="289.18" height="801.32" role="img" aria-label="xuangroup" focusable="false">
+                <g class="stroke">
+                    <path d="m1099.18 275.89c0 72.84-62.5 131.88-139.59 131.88-77.09 0-139.59-59.04-139.59-131.88 0-72.84 62.5-131.89 139.59-131.89 77.09 0 139.59 59.05 139.59 131.89z"/>
+                    <path d="m1099.18 803.44c0 72.84-62.5 131.88-139.59 131.88-77.09 0-139.59-59.04-139.59-131.88 0-72.84 62.5-131.89 139.59-131.89 77.09 0 139.59 59.05 139.59 131.89z"/>
+                    <path d="m820 275.89c0 127.93 279.18 320.48 279.18 527.55"/>
+                    <path d="m959.59 281.16c0 36.42-31.25 65.95-69.79 65.95-38.55 0-69.8-29.53-69.8-65.95 0-36.42 31.25-65.94 69.8-65.94 38.54 0 69.79 29.52 69.79 65.94z"/>
+                    <path d="m1099.18 796.84c0 36.42-31.25 65.95-69.79 65.95-38.55 0-69.8-29.53-69.8-65.95 0-36.42 31.25-65.94 69.8-65.94 38.54 0 69.79 29.52 69.79 65.94z"/>
+                    <path d="m956.98 299.08l-122.14 445.13"/>
+                    <path d="m831.08 324.59l128.51 472.25"/>
+                </g>
+            </svg>
             <span class="scramble" id="scramble" aria-hidden="true"></span>
         </div>
     </div>
@@ -196,8 +212,8 @@
             var out = document.getElementById("scramble");
             if (!stage || !card || !out) return;
 
-            var img = card.querySelector("img");
-            if (!img) return;
+            var mark = card.querySelector(".mark");
+            if (!mark) return;
 
             var TARGETS = ["萱组", "xuangroup", "萱ぐみ"];
             var POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}—=+*^?#________あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン萱组組々";
@@ -224,7 +240,7 @@
             }
 
             function overLogo(x, y) {
-                return inRect(img.getBoundingClientRect(), x, y) || inRect(refRect, x, y);
+                return inRect(mark.getBoundingClientRect(), x, y) || inRect(refRect, x, y);
             }
 
             function stopText() {
@@ -248,7 +264,7 @@
                 clearTimeout(hideTimer);
                 hideTimer = null;
                 open = true;
-                refRect = img.getBoundingClientRect();
+                refRect = mark.getBoundingClientRect();
                 card.classList.add("is-open");
                 scramble(TARGETS[Math.floor(Math.random() * TARGETS.length)]);
             }
@@ -310,7 +326,7 @@
                 },
                 hit: overLogo,
                 rect: function () {
-                    return img.getBoundingClientRect();
+                    return mark.getBoundingClientRect();
                 }
             };
         })();
